@@ -1,5 +1,6 @@
 package com.coc.camera.cameradialog;
 
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.coc.camera.R;
 import com.coc.camera.base.BaseDialogFragment;
 import com.coc.camera.config.CommonConfig;
@@ -59,7 +62,7 @@ public class CameraDialg2 extends BaseDialogFragment {
     private ImageView iv_preview_bottom_takePic;
     private TextView tv_preview_bottom_cancel;
 
-    //private LinearLayout ll_saving_bottom_panel;
+    private LinearLayout ll_saving_bottom_panel;
 
     private TextView tv_saving_bottom_cancel;
     private TextView tv_saving_bottom_retake;
@@ -68,6 +71,7 @@ public class CameraDialg2 extends BaseDialogFragment {
     private FrameLayout fl_preview;
     private FrameLayout fl_saving;
     private ImageView iv_saving_pic;
+    private boolean showMode;//false:相机预览 true：图片预览
 
     @Nullable
     public static CameraDialg2 newInstance() {
@@ -96,7 +100,7 @@ public class CameraDialg2 extends BaseDialogFragment {
         fl_preview = (FrameLayout) view.findViewById(R.id.fl_preview);
         fl_saving = (FrameLayout) view.findViewById(R.id.fl_saving);
 
-        showSavePanel(false);//显示为预览模式
+        showSaveMode(false);//显示为预览模式
 
 
         mCameraSurfaceView = (CameraSurfaceView) view.findViewById(R.id.cameraSurfaceView);
@@ -115,7 +119,7 @@ public class CameraDialg2 extends BaseDialogFragment {
         //保存时  底部操作面板
         iv_saving_pic = (ImageView) view.findViewById(R.id.iv_saving_pic);
 
-        //ll_saving_bottom_panel = (LinearLayout) view.findViewById(R.id.ll_saving_bottom_panel);
+        ll_saving_bottom_panel = (LinearLayout) view.findViewById(R.id.ll_saving_bottom_panel);
         tv_saving_bottom_cancel = (TextView) view.findViewById(R.id.tv_saving_bottom_cancel);
         tv_saving_bottom_retake = (TextView) view.findViewById(R.id.tv_saving_bottom_retake);
         tv_saving_bottom_save = (TextView) view.findViewById(R.id.tv_saving_bottom_save);
@@ -128,7 +132,7 @@ public class CameraDialg2 extends BaseDialogFragment {
         mCameraSurfaceView.SetCameraEventListener(new CameraSurfaceView.CameraEventListener() {
             @Override
             public void onTakePic(byte[] data, Camera.Parameters parameters) {
-                startPreview();
+                //startPreview();
                 onPicTaken(data, parameters);
             }
         });
@@ -201,7 +205,7 @@ public class CameraDialg2 extends BaseDialogFragment {
             @Override
             public void onClick(View v) {
 //                Toast.makeText(getContext(), "点击了重拍", Toast.LENGTH_SHORT).show();
-                showSavePanel(false);
+                methodRetake();
             }
         });
 
@@ -217,8 +221,13 @@ public class CameraDialg2 extends BaseDialogFragment {
 
     }
 
+    private void methodRetake() {
+        startPreview();
+        showSaveMode(false);
+    }
+
     //是否显示保存为保存模式 ui
-    private void showSavePanel(boolean saveMode) {
+    private void showSaveMode(boolean saveMode) {
         if (saveMode) {//查看预览照片
 //            rl_priview_content.setClickable(false);
 //            ll_preview_top_panel.setVisibility(View.GONE);
@@ -249,14 +258,36 @@ public class CameraDialg2 extends BaseDialogFragment {
     private void onPicTaken(byte[] data, Camera.Parameters parameters) {
         CameraKitResultHolder.dispose();
         CameraKitResultHolder.setJpegArray(data);
+
+        showSaveMode(true);//切换成 照片预览模式
+        showSavePanel(false);
+
         Timestamp.here("CameraDialg onPictureTaken 2");
         Glide.with(this)
                 .load(data)
+                .asBitmap()
+                .listener(new RequestListener<byte[], Bitmap>() {
+                    @Override
+                    public boolean onException(Exception e, byte[] model, Target<Bitmap> target, boolean isFirstResource) {
+                        methodRetake();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, byte[] model, Target<Bitmap> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        showSavePanel(true);
+                        return false;
+                    }
+                })
                 .into(iv_saving_pic);
     }
 
     private void showLoading(boolean isShowLoading) {
         //rl_saving_loading.setVisibility(isShowLoading ? View.VISIBLE : View.GONE);
+    }
+
+    private void showSavePanel(boolean isShowSavePanel) {
+        ll_saving_bottom_panel.setVisibility(isShowSavePanel ? View.VISIBLE : View.GONE);
     }
 
     //用户响应：触摸对焦
@@ -271,7 +302,7 @@ public class CameraDialg2 extends BaseDialogFragment {
     public void takePic() {
         Log.e("CameraDialg", "tapFous");
         if (mCameraSurfaceView != null) {
-            showSavePanel(true);
+            // showSaveMode(true);
             mCameraSurfaceView.takePicture();
         }
     }
@@ -307,9 +338,12 @@ public class CameraDialg2 extends BaseDialogFragment {
 
     //保存照片到文件，成功后回传 图片文件地址
     private void toSaveFile() {
-        showLoading(true);
+        showSavePanel(false);
         byte[] jpegArray = CameraKitResultHolder.getJpegArray();
-        if (jpegArray == null) return;
+        if (jpegArray == null) {
+            Toast.makeText(getContext(), "数据已被系统回收，请重新拍摄", Toast.LENGTH_SHORT).show();
+            return;
+        }
         Observable.just(jpegArray)
                 .map(new Function<byte[], String>() {
                     @Override
@@ -335,6 +369,7 @@ public class CameraDialg2 extends BaseDialogFragment {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+                        showSavePanel(true);
                         showLoading(false);
 
                         Log.e("CameraKitPreview", "failed,reason:\n" + Log.getStackTraceString(throwable));
@@ -342,6 +377,20 @@ public class CameraDialg2 extends BaseDialogFragment {
                     }
                 });
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("CameraDialg2", "onResume");
+    }
+
+    @Override
+    public void onPause() {
+        Log.e("CameraDialg2", "onPause");
+        super.onPause();
+    }
+
 
     /**
      * 保存图片字节数组到 文件
