@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide;
 import com.coc.camera.R;
 import com.coc.camera.base.BaseDialogFragment;
 
-public class CameraDialogTestActivity extends AppCompatActivity implements CameraDialg.FileSavedEventListener {
+public class DemoCameraDialogActivity extends AppCompatActivity implements CameraDialg.FileSavedEventListener {
 
 
     public static final String KEY_IMG_PATH = "KEY_IMGPATH";
@@ -40,8 +40,8 @@ public class CameraDialogTestActivity extends AppCompatActivity implements Camer
 //        cameradialg.setFileSavedEventListener(new CameraDialg.FileSavedEventListener() {
 //            @Override
 //            public void onFileSaved(String imgPath) {
-//                Toast.makeText(CameraDialogTestActivity.this, "图片地址：" + imgPath, Toast.LENGTH_SHORT).show();
-//                Glide.with(CameraDialogTestActivity.this).load(imgPath).into(iv_content);
+//                Toast.makeText(DemoCameraDialogActivity.this, "图片地址：" + imgPath, Toast.LENGTH_SHORT).show();
+//                Glide.with(DemoCameraDialogActivity.this).load(imgPath).into(iv_content);
 //            }
 //        });
         cameradialg.setCancelable(true, false)
@@ -53,7 +53,7 @@ public class CameraDialogTestActivity extends AppCompatActivity implements Camer
 
     @Override
     public void onFileSaved(String imgPath) {
-        Toast.makeText(CameraDialogTestActivity.this, "图片地址：" + imgPath, Toast.LENGTH_SHORT).show();
-        Glide.with(CameraDialogTestActivity.this).load(imgPath).into(iv_content);
+        Toast.makeText(DemoCameraDialogActivity.this, "图片地址：" + imgPath, Toast.LENGTH_SHORT).show();
+        Glide.with(DemoCameraDialogActivity.this).load(imgPath).into(iv_content);
     }
 }
