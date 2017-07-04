@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.dyk.cameratest.view.CameraSurfaceView
+        android:id="@+id/cameraSurfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <RelativeLayout
+        android:id="@+id/rl_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ll_top_preview_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/toggleFlash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:onClick="toggleFlash"
+                    android:src="@drawable/level_flash" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/toggleCamera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:onClick="toggleCamera"
+                    android:src="@drawable/selector_btn_switch" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <!--预览面板-->
+        <Button
+            android:id="@+id/takePic"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:background="#88427ac7"
+
+            android:text="拍照"
+            android:textColor="#aaa" />
+
+
+        <!--保存面板-->
+        <LinearLayout
+            android:id="@+id/preview_control_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#82212121"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="4">
+
+            <TextView
+                android:id="@+id/cancel_media_action"
+                style="@style/PreviewButtonsStyle"
+                android:drawableTop="@drawable/ic_clear_white_24dp"
+                android:onClick="btn_cancel"
+
+                android:text="@string/preview_controls_cancel" />
+
+
+            <TextView
+                android:id="@+id/re_take_media"
+                style="@style/PreviewButtonsStyle"
+                android:drawableTop="@drawable/ic_replay_white_24dp"
+                android:onClick="btn_remark"
+                android:text="@string/preview_controls_retake" />
+
+
+            <TextView
+                android:id="@+id/confirm_media_result"
+                style="@style/PreviewButtonsStyle"
+                android:drawableTop="@drawable/ic_done_white_24dp"
+
+                android:onClick="btn_save"
+                android:text="@string/preview_controls_confirm" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</FrameLayout>

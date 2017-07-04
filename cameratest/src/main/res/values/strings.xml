@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">CameraTest</string>
+
+    <string name="preview_controls_confirm">保存</string>
+    <string name="preview_controls_retake">重拍</string>
+    <string name="preview_controls_cancel">取消</string>
+
+</resources>

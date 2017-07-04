@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000">
+
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter" />
+
+    <!--img_content-->
+    <RelativeLayout
+        android:id="@+id/rl_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+
+        <LinearLayout
+            android:id="@+id/preview_control_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#82212121"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="4">
+
+            <TextView
+                android:id="@+id/cancel_media_action"
+                style="@style/PreviewButtonsStyle"
+                android:drawableTop="@drawable/ic_clear_white_24dp"
+                android:onClick="btn_cancel"
+
+                android:text="@string/preview_controls_cancel"
+                android:visibility="gone" />
+
+
+            <TextView
+                android:id="@+id/re_take_media"
+                style="@style/PreviewButtonsStyle"
+                android:drawableTop="@drawable/ic_replay_white_24dp"
+                android:onClick="btn_remark"
+                android:text="@string/preview_controls_retake" />
+
+            <TextView style="@style/PreviewButtonsStyle" />
+
+            <TextView
+                android:id="@+id/confirm_media_result"
+                style="@style/PreviewButtonsStyle"
+                android:drawableTop="@drawable/ic_done_white_24dp"
+
+                android:onClick="btn_save"
+                android:text="@string/preview_controls_confirm" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+    <!--loading-->
+    <RelativeLayout
+        android:id="@+id/rl_loading1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/comm_func_dialog_loading_bg"
+        android:paddingBottom="10dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:paddingTop="10dp">
+
+
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true" />
+
+
+        <TextView
+            android:id="@+id/tv_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pb_loading"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:text="加载中，请稍后"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+
+    <!--load_error-->
+    <RelativeLayout
+        android:id="@+id/rl_loading_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/comm_func_dialog_loading_bg"
+        android:paddingBottom="10dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:paddingTop="10dp"
+        android:visibility="gone">
+
+
+        <ImageView
+            android:id="@+id/pb_loading_error"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/comm_func_dial_bigimage_loading_error" />
+
+
+        <TextView
+            android:id="@+id/tv_loading_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pb_loading_error"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:text="加载失败，请稍后重试!"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
+
+
+
