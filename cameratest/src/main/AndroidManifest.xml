@@ -12,16 +12,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name="com.coc.camera.MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/CamreaTheme">
 
-        </activity>
 
 
         <activity
-            android:name="com.coc.camera.MainBackUpActivity"
+            android:name="com.coc.camera.CameraDialogTestActivity"
             android:screenOrientation="portrait"
             android:theme="@style/CamreaTheme">
             <intent-filter>

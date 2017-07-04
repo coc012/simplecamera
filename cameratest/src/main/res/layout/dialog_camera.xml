@@ -12,8 +12,7 @@
     <RelativeLayout
         android:id="@+id/rl_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent">
+        android:layout_height="match_parent">
 
         <!--预览时 顶部操作面板-->
         <LinearLayout
@@ -21,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="20dp"
+            android:background="#80000000"
             android:baselineAligned="false"
             android:orientation="horizontal">
 
@@ -126,6 +125,41 @@
                 android:drawableTop="@drawable/ic_done_white_24dp"
                 android:text="@string/preview_controls_confirm" />
         </LinearLayout>
+
+        <!--loading-->
+        <RelativeLayout
+            android:id="@+id/rl_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:paddingBottom="10dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="10dp"
+            android:visibility="gone">
+
+
+            <!--<ProgressBar-->
+            <!--android:visibility="gone"-->
+            <!--android:id="@+id/pb_loading"-->
+            <!--android:layout_width="70dp"-->
+            <!--android:layout_height="70dp"-->
+            <!--android:layout_centerInParent="true" />-->
+
+
+            <!--<TextView-->
+            <!--android:visibility="gone"-->
+            <!--android:id="@+id/tv_loading"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/pb_loading"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:text="加载中，请稍后"-->
+            <!--android:textColor="#FFFFFF"-->
+            <!--android:textSize="12sp" />-->
+
+        </RelativeLayout>
 
 
     </RelativeLayout>

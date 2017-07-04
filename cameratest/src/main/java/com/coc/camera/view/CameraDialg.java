@@ -30,7 +30,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.coc.camera.view.PicPreviewDialog.DIR_CAMERA_PATH;
+import static com.coc.camera.view.CommonConfig.DIR_CAMERA_PATH;
 
 /**
  * Created by tang on 2017/7/3.
@@ -39,6 +39,7 @@ import static com.coc.camera.view.PicPreviewDialog.DIR_CAMERA_PATH;
 public class CameraDialg extends BaseDialogFragment {
     private CameraSurfaceView mCameraSurfaceView;
     private RelativeLayout rl_content;
+    private RelativeLayout rl_loading;
 
     private LinearLayout ll_preview_top_panel;
     private ImageView iv_preview_top_toggleFlash;
@@ -81,6 +82,9 @@ public class CameraDialg extends BaseDialogFragment {
         tv_saving_bottom_save = (TextView) view.findViewById(R.id.tv_saving_bottom_save);
 
 
+        rl_loading = (RelativeLayout) view.findViewById(R.id.rl_loading);
+
+
         //相机拍照 事件
         mCameraSurfaceView.SetCameraEventListener(new CameraSurfaceView.CameraEventListener() {
             @Override
@@ -94,6 +98,13 @@ public class CameraDialg extends BaseDialogFragment {
             @Override
             public void onClick(View v) {
                 tapFocus();
+            }
+        });
+        //保存时 拦截 事件
+        rl_loading.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
@@ -137,7 +148,7 @@ public class CameraDialg extends BaseDialogFragment {
         tv_saving_bottom_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "点击了取消", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "点击了取消", Toast.LENGTH_SHORT).show();
                 dismissSafe();
             }
         });
@@ -146,7 +157,7 @@ public class CameraDialg extends BaseDialogFragment {
         tv_saving_bottom_retake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "点击了重拍", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "点击了重拍", Toast.LENGTH_SHORT).show();
                 showSavePanel(false);
                 startPreview();
             }
@@ -156,7 +167,7 @@ public class CameraDialg extends BaseDialogFragment {
         tv_saving_bottom_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "点击了保存", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "点击了保存", Toast.LENGTH_SHORT).show();
                 toSaveFile();
             }
         });
@@ -192,7 +203,10 @@ public class CameraDialg extends BaseDialogFragment {
         CameraKitResultHolder.dispose();
         CameraKitResultHolder.setJpegArray(data);
         Timestamp.here("CameraDialg onPictureTaken 2");
+    }
 
+    private void showLoading(boolean isShowLoading) {
+        rl_loading.setVisibility(isShowLoading ? View.VISIBLE : View.GONE);
     }
 
     //用户响应：触摸对焦
@@ -213,30 +227,44 @@ public class CameraDialg extends BaseDialogFragment {
     }
 
     //回传 保存的图片文件地址
+
+    /**
+     * 回传 保存的图片文件地址
+     * 优先使用 mFileSavedEventListener 进行回传
+     * 如果没有设置 mFileSavedEventListener，就判断 接口实现回传
+     *
+     * @param imgpath
+     */
     private void toPageForResult(String imgpath) {
-        Toast.makeText(getContext(), "保存照片成功，地址：!" + imgpath, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), "保存照片成功，地址：!" + imgpath, Toast.LENGTH_SHORT).show();
         dismissSafe();
         CameraKitResultHolder.dispose();//清理为使用的
-//        if (mFileSavedEventListener != null) {
-//
-//            mFileSavedEventListener.onFileSaved(imgpath);
-//        }
+
+        if (mFileSavedEventListener != null) {
+            mFileSavedEventListener.onFileSaved(imgpath);
+            return;
+        }
+
         FragmentActivity activity = getActivity();
         if (activity != null && activity instanceof FileSavedEventListener) {
             ((FileSavedEventListener) activity).onFileSaved(imgpath);
+        } else {
+            Log.i("CameraDialg", "can't send imgpath,may not set Listener! imgpath:" + imgpath);
         }
 
     }
 
+
     //保存照片到文件，成功后回传 图片文件地址
     private void toSaveFile() {
+        showLoading(true);
         byte[] jpegArray = CameraKitResultHolder.getJpegArray();
         if (jpegArray == null) return;
         Observable.just(jpegArray)
                 .map(new Function<byte[], String>() {
                     @Override
                     public String apply(@NonNull byte[] bytes) throws Exception {
-                        File file = new File(DIR_CAMERA_PATH);
+                        File file = new File(CommonConfig.DIR_CAMERA_PATH);
                         if (!file.exists()) file.mkdirs();
                         String localStoragePath = DIR_CAMERA_PATH + File.separator + System.currentTimeMillis() + ".jpg";
                         return bytes2File(bytes, localStoragePath);
@@ -248,12 +276,17 @@ public class CameraDialg extends BaseDialogFragment {
                     @Override
                     public void accept(@NonNull String imgpath) throws Exception {
                         Log.e("CameraKit", "PreviewActivity保存地址" + imgpath);
-                        if (!TextUtils.isEmpty(imgpath))
+                        showLoading(false);
+
+                        if (!TextUtils.isEmpty(imgpath)) {
                             toPageForResult(imgpath);
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
+                        showLoading(false);
+
                         Log.e("CameraKitPreview", "failed,reason:\n" + Log.getStackTraceString(throwable));
                         Toast.makeText(getContext(), "保存照片失败，请检查存储卡是否可用!", Toast.LENGTH_SHORT).show();
                     }
