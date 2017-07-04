@@ -1,4 +1,4 @@
-package com.coc.camera.view;
+package com.coc.camera.utils;
 
 import android.util.Log;
 

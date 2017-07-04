@@ -16,7 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coc.camera.R;
+import com.coc.camera.base.BaseDialogFragment;
 import com.coc.camera.config.CommonConfig;
+import com.coc.camera.utils.Timestamp;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

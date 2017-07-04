@@ -1,4 +1,4 @@
-package com.coc.camera.view;
+package com.coc.camera.base;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
