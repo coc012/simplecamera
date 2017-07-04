@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.coc.camera.R;
 
-public class DemoCameraDialogActivity extends AppCompatActivity implements CameraDialg.FileSavedEventListener {
+public class DemoCameraDialogActivity extends AppCompatActivity implements CameraDialg.FileSavedEventListener, CameraDialg2.FileSavedEventListener {
 
 
     public static final String KEY_IMG_PATH = "KEY_IMGPATH";
@@ -38,7 +38,7 @@ public class DemoCameraDialogActivity extends AppCompatActivity implements Camer
         Log.e("mainActivity", "tapFous");
 
         //添加权限检查 适配特殊定制机型
-        CameraDialg cameraDialg = CameraDialg.newInstance();
+        CameraDialg2 cameraDialg = CameraDialg2.newInstance();
         if (cameraDialg != null) {
             //可以使用匿名内部类的样式进行结果回调，也可以是 容器实行相关接口；最好的使用EventBus进行解耦
 //        cameradialg.setFileSavedEventListener(new CameraDialg.FileSavedEventListener() {

@@ -9,12 +9,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.coc.camera.R;
 import com.coc.camera.base.BaseDialogFragment;
 import com.coc.camera.config.CommonConfig;
@@ -45,10 +47,10 @@ import static com.coc.camera.config.CommonConfig.DIR_CAMERA_PATH;
  * 2. 对应的activity 实现FileSavedEventListener
  */
 
-public class CameraDialg extends BaseDialogFragment {
+public class CameraDialg2 extends BaseDialogFragment {
     private CameraSurfaceView mCameraSurfaceView;
-    private RelativeLayout rl_content;
-    private RelativeLayout rl_loading;
+    private RelativeLayout rl_priview_content;
+    private RelativeLayout rl_saving_loading;
 
     private LinearLayout ll_preview_top_panel;
     private ImageView iv_preview_top_toggleFlash;
@@ -57,20 +59,22 @@ public class CameraDialg extends BaseDialogFragment {
     private ImageView iv_preview_bottom_takePic;
     private TextView tv_preview_bottom_cancel;
 
-    private LinearLayout ll_saving_bottom_panel;
+    //private LinearLayout ll_saving_bottom_panel;
 
     private TextView tv_saving_bottom_cancel;
     private TextView tv_saving_bottom_retake;
     private TextView tv_saving_bottom_save;
     private FileSavedEventListener mFileSavedEventListener;
-
+    private FrameLayout fl_preview;
+    private FrameLayout fl_saving;
+    private ImageView iv_saving_pic;
 
     @Nullable
-    public static CameraDialg newInstance() {
+    public static CameraDialg2 newInstance() {
         //检查相机权限
         boolean isCameraable = ExtraPermissionsHelper.getInstance().checkPermission_camera();
         if (isCameraable) {
-            CameraDialg cameradialg = new CameraDialg();
+            CameraDialg2 cameradialg = new CameraDialg2();
             cameradialg.setCancelable(true, false)
                     .setMaskable(false)
                     .setWithdMode(BaseDialogFragment.WIDTH_MATCH);
@@ -83,14 +87,20 @@ public class CameraDialg extends BaseDialogFragment {
 
     @Override
     public View realOnCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_camera, container, false);
+        View view = inflater.inflate(R.layout.dialog_camera_2, container, false);
         initView(view);
         return view;
     }
 
     private void initView(View view) {
+        fl_preview = (FrameLayout) view.findViewById(R.id.fl_preview);
+        fl_saving = (FrameLayout) view.findViewById(R.id.fl_saving);
+
+        showSavePanel(false);//显示为预览模式
+
+
         mCameraSurfaceView = (CameraSurfaceView) view.findViewById(R.id.cameraSurfaceView);
-        rl_content = (RelativeLayout) view.findViewById(R.id.rl_priview_content);
+        rl_priview_content = (RelativeLayout) view.findViewById(R.id.rl_priview_content);
 
         //预览时 顶部操作面板
         ll_preview_top_panel = (LinearLayout) view.findViewById(R.id.ll_preview_top_panel);
@@ -101,36 +111,33 @@ public class CameraDialg extends BaseDialogFragment {
         iv_preview_bottom_takePic = (ImageView) view.findViewById(R.id.iv_preview_bottom_takePic);
         tv_preview_bottom_cancel = (TextView) view.findViewById(R.id.tv_preview_bottom_cancel);
 
+
         //保存时  底部操作面板
-        ll_saving_bottom_panel = (LinearLayout) view.findViewById(R.id.ll_saving_bottom_panel);
+        iv_saving_pic = (ImageView) view.findViewById(R.id.iv_saving_pic);
+
+        //ll_saving_bottom_panel = (LinearLayout) view.findViewById(R.id.ll_saving_bottom_panel);
         tv_saving_bottom_cancel = (TextView) view.findViewById(R.id.tv_saving_bottom_cancel);
         tv_saving_bottom_retake = (TextView) view.findViewById(R.id.tv_saving_bottom_retake);
         tv_saving_bottom_save = (TextView) view.findViewById(R.id.tv_saving_bottom_save);
 
 
-        rl_loading = (RelativeLayout) view.findViewById(R.id.rl_loading);
+        rl_saving_loading = (RelativeLayout) view.findViewById(R.id.rl_saving_loading);
 
 
         //相机拍照 事件
         mCameraSurfaceView.SetCameraEventListener(new CameraSurfaceView.CameraEventListener() {
             @Override
             public void onTakePic(byte[] data, Camera.Parameters parameters) {
+                startPreview();
                 onPicTaken(data, parameters);
             }
         });
 
         //自动对焦 事件
-        rl_content.setOnClickListener(new View.OnClickListener() {
+        rl_priview_content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 tapFocus();
-            }
-        });
-        //保存时 拦截 事件
-        rl_loading.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
 
@@ -170,6 +177,16 @@ public class CameraDialg extends BaseDialogFragment {
 
 
         //保存用面板
+
+        //保存时 拦截 事件
+        fl_saving.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
         //取消按键
         tv_saving_bottom_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,7 +202,6 @@ public class CameraDialg extends BaseDialogFragment {
             public void onClick(View v) {
 //                Toast.makeText(getContext(), "点击了重拍", Toast.LENGTH_SHORT).show();
                 showSavePanel(false);
-                startPreview();
             }
         });
 
@@ -198,25 +214,30 @@ public class CameraDialg extends BaseDialogFragment {
             }
         });
 
-        showSavePanel(false);//显示为预览模式
 
     }
 
     //是否显示保存为保存模式 ui
     private void showSavePanel(boolean saveMode) {
         if (saveMode) {//查看预览照片
-            rl_content.setClickable(false);
-            ll_preview_top_panel.setVisibility(View.GONE);
-            rl_preview_botton_panel.setVisibility(View.GONE);
-
-            ll_saving_bottom_panel.setVisibility(View.VISIBLE);
+//            rl_priview_content.setClickable(false);
+//            ll_preview_top_panel.setVisibility(View.GONE);
+//            rl_preview_botton_panel.setVisibility(View.GONE);
+//
+//            ll_saving_bottom_panel.setVisibility(View.VISIBLE);
+            fl_preview.setVisibility(View.GONE);
+            fl_saving.setVisibility(View.VISIBLE);
         } else {//预览模式
-            rl_content.setClickable(true);
+//            rl_priview_content.setClickable(true);
+//
+//            ll_preview_top_panel.setVisibility(View.VISIBLE);
+//            rl_preview_botton_panel.setVisibility(View.VISIBLE);
+//
+//            ll_saving_bottom_panel.setVisibility(View.GONE);
 
-            ll_preview_top_panel.setVisibility(View.VISIBLE);
-            rl_preview_botton_panel.setVisibility(View.VISIBLE);
 
-            ll_saving_bottom_panel.setVisibility(View.GONE);
+            fl_preview.setVisibility(View.VISIBLE);
+            fl_saving.setVisibility(View.GONE);
         }
     }
 
@@ -229,10 +250,13 @@ public class CameraDialg extends BaseDialogFragment {
         CameraKitResultHolder.dispose();
         CameraKitResultHolder.setJpegArray(data);
         Timestamp.here("CameraDialg onPictureTaken 2");
+        Glide.with(this)
+                .load(data)
+                .into(iv_saving_pic);
     }
 
     private void showLoading(boolean isShowLoading) {
-        rl_loading.setVisibility(isShowLoading ? View.VISIBLE : View.GONE);
+        //rl_saving_loading.setVisibility(isShowLoading ? View.VISIBLE : View.GONE);
     }
 
     //用户响应：触摸对焦
@@ -366,7 +390,7 @@ public class CameraDialg extends BaseDialogFragment {
         }
     }
 
-    public CameraDialg setFileSavedEventListener(FileSavedEventListener fileSavedEventListener) {
+    public CameraDialg2 setFileSavedEventListener(FileSavedEventListener fileSavedEventListener) {
         this.mFileSavedEventListener = fileSavedEventListener;
         return this;
     }

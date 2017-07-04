@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/fl_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+
+        <com.coc.camera.cameradialog.CameraSurfaceView
+            android:id="@+id/cameraSurfaceView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+        <RelativeLayout
+            android:id="@+id/rl_priview_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!--预览时 顶部操作面板-->
+            <LinearLayout
+                android:id="@+id/ll_preview_top_panel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:background="#80000000"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/iv_preview_top_toggleFlash"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:src="@drawable/level_flash" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/iv_preview_top_toggleCamera"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:src="@drawable/selector_btn_switch" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <!--预览时 底部操作面板-->
+            <RelativeLayout
+                android:id="@+id/rl_preview_botton_panel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="#80000000"
+                android:onClick="rl_pan_mask">
+
+
+                <ImageView
+                    android:id="@+id/iv_preview_bottom_takePic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="10dp"
+                    android:onClick="capturePhoto"
+                    android:src="@drawable/selector_btn_capture" />
+
+                <TextView
+                    android:id="@+id/tv_preview_bottom_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="8dp"
+                    android:onClick="cancelPage"
+                    android:text="取消"
+                    android:textColor="#ffffff" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:id="@+id/fl_saving"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000">
+
+        <ImageView
+            android:id="@+id/iv_saving_pic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter" />
+
+        <RelativeLayout
+            android:id="@+id/rl_saving"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <!--保存时  底部操作面板-->
+            <LinearLayout
+                android:id="@+id/ll_saving_bottom_panel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="#82212121"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <TextView
+                    android:id="@+id/tv_saving_bottom_cancel"
+                    style="@style/PreviewButtonsStyle"
+                    android:drawableTop="@drawable/ic_clear_white_24dp"
+                    android:text="@string/preview_controls_cancel" />
+
+
+                <TextView
+                    android:id="@+id/tv_saving_bottom_retake"
+                    style="@style/PreviewButtonsStyle"
+                    android:drawableTop="@drawable/ic_replay_white_24dp"
+                    android:text="@string/preview_controls_retake" />
+
+
+                <TextView
+                    android:id="@+id/tv_saving_bottom_save"
+                    style="@style/PreviewButtonsStyle"
+                    android:drawableTop="@drawable/ic_done_white_24dp"
+                    android:text="@string/preview_controls_confirm" />
+            </LinearLayout>
+
+            <!--loading-->
+            <RelativeLayout
+
+                android:id="@+id/rl_saving_loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:paddingBottom="10dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:paddingTop="10dp"
+                android:visibility="gone">
+
+
+                <ProgressBar
+                    android:id="@+id/pb_loading"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerInParent="true" />
+
+
+                <TextView
+
+                    android:id="@+id/tv_loading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/pb_loading"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:text="请稍后"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12sp" />
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+    </FrameLayout>
+</FrameLayout>
