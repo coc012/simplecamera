@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.coc.camera.R;
+import com.coc.camera.config.CommonConfig;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -30,7 +31,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.coc.camera.view.CommonConfig.DIR_CAMERA_PATH;
+import static com.coc.camera.config.CommonConfig.DIR_CAMERA_PATH;
 
 /**
  * Created by tang on 2017/7/3.

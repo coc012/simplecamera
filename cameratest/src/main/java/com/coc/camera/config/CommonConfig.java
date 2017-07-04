@@ -1,4 +1,4 @@
-package com.coc.camera.view;
+package com.coc.camera.config;
 
 import android.os.Environment;
 
