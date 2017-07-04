@@ -36,6 +36,8 @@ import io.reactivex.schedulers.Schedulers;
  * Created by tang on 2017/7/3.
  */
 
+
+@Deprecated
 public class PicPreviewDialog extends BaseDialogFragment {
     public static final String DIR_CAMERA_PATH = Environment.getExternalStorageDirectory() + File.separator + "uxin" + File.separator + "newcar2b" + File.separator + "camera";
 
@@ -60,8 +62,8 @@ public class PicPreviewDialog extends BaseDialogFragment {
         rl_content = (RelativeLayout) view.findViewById(R.id.rl_content);
 
         iv_image = (ImageView) view.findViewById(R.id.iv_image);
-        re_take_media = (TextView) view.findViewById(R.id.re_take_media);
-        confirm_media_result = (TextView) view.findViewById(R.id.confirm_media_result);
+        re_take_media = (TextView) view.findViewById(R.id.tv_saving_bottom_retake);
+        confirm_media_result = (TextView) view.findViewById(R.id.tv_saving_bottom_save);
     }
 
     @Override

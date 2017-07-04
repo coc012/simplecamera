@@ -4,23 +4,26 @@
     android:layout_height="match_parent">
 
 
-
-
     <RelativeLayout
 
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/iv_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <Button
-            android:id="@+id/takePic"
+            android:id="@+id/iv_preview_bottom_takePic"
             android:layout_width="80dp"
-            android:onClick="takePic"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
             android:background="#88427ac7"
-            android:text="拍照"
+            android:onClick="takePic"
+            android:text="去拍照"
             android:textColor="#aaa" />
     </RelativeLayout>
 </FrameLayout>

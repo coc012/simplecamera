@@ -3,12 +3,12 @@ package com.coc.camera.view;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -39,13 +39,20 @@ import static com.coc.camera.view.PicPreviewDialog.DIR_CAMERA_PATH;
 public class CameraDialg extends BaseDialogFragment {
     private CameraSurfaceView mCameraSurfaceView;
     private RelativeLayout rl_content;
-    private Button takePicBtn;
-    private LinearLayout ll_top_preview_panel;
-    private LinearLayout preview_control_panel;
-    private ImageView toggleFlash;
-    private TextView cancel_media_action;
-    private TextView re_take_media;
-    private TextView confirm_media_result;
+
+    private LinearLayout ll_preview_top_panel;
+    private ImageView iv_preview_top_toggleFlash;
+
+    private RelativeLayout rl_preview_botton_panel;
+    private ImageView iv_preview_bottom_takePic;
+    private TextView tv_preview_bottom_cancel;
+
+    private LinearLayout ll_saving_bottom_panel;
+
+    private TextView tv_saving_bottom_cancel;
+    private TextView tv_saving_bottom_retake;
+    private TextView tv_saving_bottom_save;
+    private FileSavedEventListener mFileSavedEventListener;
 
     @Override
     public View realOnCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,18 +63,25 @@ public class CameraDialg extends BaseDialogFragment {
 
     private void initView(View view) {
         mCameraSurfaceView = (CameraSurfaceView) view.findViewById(R.id.cameraSurfaceView);
-        ll_top_preview_panel = (LinearLayout) view.findViewById(R.id.ll_top_preview_panel);
-        toggleFlash = (ImageView) view.findViewById(R.id.toggleFlash);
-        toggleFlash.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int flashMode = mCameraSurfaceView.setFlashMode();
-                toggleFlash.setImageLevel(flashMode);
-            }
-        });
-
         rl_content = (RelativeLayout) view.findViewById(R.id.rl_content);
-        takePicBtn = (Button) view.findViewById(R.id.takePic);
+
+        //预览时 顶部操作面板
+        ll_preview_top_panel = (LinearLayout) view.findViewById(R.id.ll_preview_top_panel);
+        iv_preview_top_toggleFlash = (ImageView) view.findViewById(R.id.iv_preview_top_toggleFlash);
+
+        //预览时 底部操作面板
+        rl_preview_botton_panel = (RelativeLayout) view.findViewById(R.id.rl_preview_botton_panel);
+        iv_preview_bottom_takePic = (ImageView) view.findViewById(R.id.iv_preview_bottom_takePic);
+        tv_preview_bottom_cancel = (TextView) view.findViewById(R.id.tv_preview_bottom_cancel);
+
+        //保存时  底部操作面板
+        ll_saving_bottom_panel = (LinearLayout) view.findViewById(R.id.ll_saving_bottom_panel);
+        tv_saving_bottom_cancel = (TextView) view.findViewById(R.id.tv_saving_bottom_cancel);
+        tv_saving_bottom_retake = (TextView) view.findViewById(R.id.tv_saving_bottom_retake);
+        tv_saving_bottom_save = (TextView) view.findViewById(R.id.tv_saving_bottom_save);
+
+
+        //相机拍照 事件
         mCameraSurfaceView.SetCameraEventListener(new CameraSurfaceView.CameraEventListener() {
             @Override
             public void onTakePic(byte[] data, Camera.Parameters parameters) {
@@ -75,6 +89,7 @@ public class CameraDialg extends BaseDialogFragment {
             }
         });
 
+        //自动对焦 事件
         rl_content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,21 +98,43 @@ public class CameraDialg extends BaseDialogFragment {
         });
 
 
-        takePicBtn.setOnClickListener(new View.OnClickListener() {
+        //切换闪光灯 事件
+        iv_preview_top_toggleFlash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int flashMode = mCameraSurfaceView.setFlashMode();
+                iv_preview_top_toggleFlash.setImageLevel(flashMode);
+            }
+        });
+
+
+        rl_preview_botton_panel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //只为拦截 事件
+            }
+        });
+
+        //拍照 事件
+        iv_preview_bottom_takePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 takePic();
             }
         });
 
+        //预览时  取消按钮
+        tv_preview_bottom_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissSafe();
+            }
+        });
+
+
         //保存用面板
-
-        preview_control_panel = (LinearLayout) view.findViewById(R.id.preview_control_panel);
-        cancel_media_action = (TextView) view.findViewById(R.id.cancel_media_action);
-        re_take_media = (TextView) view.findViewById(R.id.re_take_media);
-        confirm_media_result = (TextView) view.findViewById(R.id.confirm_media_result);
-
-        cancel_media_action.setOnClickListener(new View.OnClickListener() {
+        //取消按键
+        tv_saving_bottom_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "点击了取消", Toast.LENGTH_SHORT).show();
@@ -105,7 +142,8 @@ public class CameraDialg extends BaseDialogFragment {
             }
         });
 
-        re_take_media.setOnClickListener(new View.OnClickListener() {
+        //重拍
+        tv_saving_bottom_retake.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "点击了重拍", Toast.LENGTH_SHORT).show();
@@ -114,7 +152,8 @@ public class CameraDialg extends BaseDialogFragment {
             }
         });
 
-        confirm_media_result.setOnClickListener(new View.OnClickListener() {
+        //保存
+        tv_saving_bottom_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "点击了保存", Toast.LENGTH_SHORT).show();
@@ -122,44 +161,41 @@ public class CameraDialg extends BaseDialogFragment {
             }
         });
 
-        showSavePanel(false);
+        showSavePanel(false);//显示为预览模式
 
     }
 
+    //是否显示保存为保存模式 ui
     private void showSavePanel(boolean saveMode) {
         if (saveMode) {//查看预览照片
             rl_content.setClickable(false);
-            ll_top_preview_panel.setVisibility(View.GONE);
-            takePicBtn.setVisibility(View.GONE);
-            preview_control_panel.setVisibility(View.VISIBLE);
+            ll_preview_top_panel.setVisibility(View.GONE);
+            rl_preview_botton_panel.setVisibility(View.GONE);
+
+            ll_saving_bottom_panel.setVisibility(View.VISIBLE);
         } else {//预览模式
             rl_content.setClickable(true);
-            ll_top_preview_panel.setVisibility(View.VISIBLE);
-            takePicBtn.setVisibility(View.VISIBLE);
 
-            preview_control_panel.setVisibility(View.GONE);
+            ll_preview_top_panel.setVisibility(View.VISIBLE);
+            rl_preview_botton_panel.setVisibility(View.VISIBLE);
+
+            ll_saving_bottom_panel.setVisibility(View.GONE);
         }
     }
 
+    //重新预览
     private void startPreview() {
         mCameraSurfaceView.reStartPreview();
-
     }
-
 
     private void onPicTaken(byte[] data, Camera.Parameters parameters) {
         CameraKitResultHolder.dispose();
         CameraKitResultHolder.setJpegArray(data);
         Timestamp.here("CameraDialg onPictureTaken 2");
 
-
-//        PicPreviewDialog picPreviewDialog = new PicPreviewDialog();
-//        picPreviewDialog.setCancelable(true, false)
-//                .setWithdMode(BaseDialogFragment.WIDTH_MATCH)
-//                .showSafe(getFragmentManager(), "preview");
     }
 
-
+    //用户响应：触摸对焦
     public void tapFocus() {
         Log.e("CameraDialg", "tapFous");
         if (mCameraSurfaceView != null) {
@@ -167,6 +203,7 @@ public class CameraDialg extends BaseDialogFragment {
         }
     }
 
+    //用户响应：拍照
     public void takePic() {
         Log.e("CameraDialg", "tapFous");
         if (mCameraSurfaceView != null) {
@@ -175,6 +212,23 @@ public class CameraDialg extends BaseDialogFragment {
         }
     }
 
+    //回传 保存的图片文件地址
+    private void toPageForResult(String imgpath) {
+        Toast.makeText(getContext(), "保存照片成功，地址：!" + imgpath, Toast.LENGTH_SHORT).show();
+        dismissSafe();
+        CameraKitResultHolder.dispose();//清理为使用的
+//        if (mFileSavedEventListener != null) {
+//
+//            mFileSavedEventListener.onFileSaved(imgpath);
+//        }
+        FragmentActivity activity = getActivity();
+        if (activity != null && activity instanceof FileSavedEventListener) {
+            ((FileSavedEventListener) activity).onFileSaved(imgpath);
+        }
+
+    }
+
+    //保存照片到文件，成功后回传 图片文件地址
     private void toSaveFile() {
         byte[] jpegArray = CameraKitResultHolder.getJpegArray();
         if (jpegArray == null) return;
@@ -206,17 +260,8 @@ public class CameraDialg extends BaseDialogFragment {
                 });
     }
 
-    private void toPageForResult(String imgpath) {
-        Toast.makeText(getContext(), "保存照片成功，地址：!" + imgpath, Toast.LENGTH_SHORT).show();
-        dismissSafe();
-
-    }
-
-
     /**
-     * @param bytes
-     * @param outputFile
-     * @return
+     * 保存图片字节数组到 文件
      */
     public String bytes2File(byte[] bytes, String outputFile) {
         BufferedOutputStream bos = null;
@@ -261,4 +306,14 @@ public class CameraDialg extends BaseDialogFragment {
             }
         }
     }
+
+    public CameraDialg setFileSavedEventListener(FileSavedEventListener fileSavedEventListener) {
+        this.mFileSavedEventListener = fileSavedEventListener;
+        return this;
+    }
+
+    public interface FileSavedEventListener {
+        void onFileSaved(String imgPath);
+    }
+
 }

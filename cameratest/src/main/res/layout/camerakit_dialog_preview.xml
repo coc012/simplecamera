@@ -22,7 +22,7 @@
 
 
         <LinearLayout
-            android:id="@+id/preview_control_panel"
+            android:id="@+id/ll_saving_bottom_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -32,7 +32,7 @@
             android:weightSum="4">
 
             <TextView
-                android:id="@+id/cancel_media_action"
+                android:id="@+id/tv_saving_bottom_cancel"
                 style="@style/PreviewButtonsStyle"
                 android:drawableTop="@drawable/ic_clear_white_24dp"
                 android:onClick="btn_cancel"
@@ -42,7 +42,7 @@
 
 
             <TextView
-                android:id="@+id/re_take_media"
+                android:id="@+id/tv_saving_bottom_retake"
                 style="@style/PreviewButtonsStyle"
                 android:drawableTop="@drawable/ic_replay_white_24dp"
                 android:onClick="btn_remark"
@@ -51,7 +51,7 @@
             <TextView style="@style/PreviewButtonsStyle" />
 
             <TextView
-                android:id="@+id/confirm_media_result"
+                android:id="@+id/tv_saving_bottom_save"
                 style="@style/PreviewButtonsStyle"
                 android:drawableTop="@drawable/ic_done_white_24dp"
 

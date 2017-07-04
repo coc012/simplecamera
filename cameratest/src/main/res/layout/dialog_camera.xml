@@ -12,14 +12,17 @@
     <RelativeLayout
         android:id="@+id/rl_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent">
 
+        <!--预览时 顶部操作面板-->
         <LinearLayout
-            android:id="@+id/ll_top_preview_panel"
+            android:id="@+id/ll_preview_top_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginTop="20dp"
+            android:baselineAligned="false"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -29,11 +32,10 @@
                 android:gravity="center">
 
                 <ImageView
-                    android:id="@+id/toggleFlash"
+                    android:id="@+id/iv_preview_top_toggleFlash"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:onClick="toggleFlash"
                     android:src="@drawable/level_flash" />
 
 
@@ -47,11 +49,10 @@
                 android:visibility="gone">
 
                 <ImageView
-                    android:id="@+id/toggleCamera"
+                    android:id="@+id/iv_preview_top_toggleCamera"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:onClick="toggleCamera"
                     android:src="@drawable/selector_btn_switch" />
 
 
@@ -60,23 +61,43 @@
 
         </LinearLayout>
 
-        <!--预览面板-->
-        <Button
-            android:id="@+id/takePic"
-            android:layout_width="80dp"
-            android:layout_height="50dp"
+
+        <!--预览时 底部操作面板-->
+        <RelativeLayout
+            android:id="@+id/rl_preview_botton_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
-            android:background="#88427ac7"
-
-            android:text="拍照"
-            android:textColor="#aaa" />
+            android:background="#80000000"
+            android:onClick="rl_pan_mask">
 
 
-        <!--保存面板-->
+            <ImageView
+                android:id="@+id/iv_preview_bottom_takePic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_margin="10dp"
+                android:onClick="capturePhoto"
+                android:src="@drawable/selector_btn_capture" />
+
+            <TextView
+                android:id="@+id/tv_preview_bottom_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="8dp"
+                android:onClick="cancelPage"
+                android:text="取消"
+                android:textColor="#ffffff" />
+
+        </RelativeLayout>
+
+
+        <!--保存时  底部操作面板-->
         <LinearLayout
-            android:id="@+id/preview_control_panel"
+            android:id="@+id/ll_saving_bottom_panel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -86,28 +107,23 @@
             android:weightSum="4">
 
             <TextView
-                android:id="@+id/cancel_media_action"
+                android:id="@+id/tv_saving_bottom_cancel"
                 style="@style/PreviewButtonsStyle"
                 android:drawableTop="@drawable/ic_clear_white_24dp"
-                android:onClick="btn_cancel"
-
                 android:text="@string/preview_controls_cancel" />
 
 
             <TextView
-                android:id="@+id/re_take_media"
+                android:id="@+id/tv_saving_bottom_retake"
                 style="@style/PreviewButtonsStyle"
                 android:drawableTop="@drawable/ic_replay_white_24dp"
-                android:onClick="btn_remark"
                 android:text="@string/preview_controls_retake" />
 
 
             <TextView
-                android:id="@+id/confirm_media_result"
+                android:id="@+id/tv_saving_bottom_save"
                 style="@style/PreviewButtonsStyle"
                 android:drawableTop="@drawable/ic_done_white_24dp"
-
-                android:onClick="btn_save"
                 android:text="@string/preview_controls_confirm" />
         </LinearLayout>
 

@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by dyk on 2016/4/6.
+ * Created by coc on 2017/7/3.
  */
 public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Camera.AutoFocusCallback {
 
@@ -49,42 +49,11 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
             if (mCameraEventListener != null) {
+                //如果是连续拍 可以打开此项、但是需要处理 对应crash
                 //mCamera.stopPreview();// 关闭预览
                 //mCamera.startPreview();// 开启预览
                 mCameraEventListener.onTakePic(data, camera.getParameters());
             }
-//            BufferedOutputStream bos = null;
-//            Bitmap bm = null;
-//            try {
-//                // 获得图片
-//                bm = BitmapFactory.decodeByteArray(data, 0, data.length);
-//                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-//                    Log.i(TAG, "Environment.getExternalStorageDirectory()=" + Environment.getExternalStorageDirectory());
-//                    String filePath = "/sdcard/dyk" + System.currentTimeMillis() + ".jpg";//照片保存路径
-//                    File file = new File(filePath);
-//                    if (!file.exists()) {
-//                        file.createNewFile();
-//                    }
-//                    bos = new BufferedOutputStream(new FileOutputStream(file));
-//                    bm.compress(Bitmap.CompressFormat.JPEG, 100, bos);//将图片压缩到流中
-//
-//                } else {
-//                    Toast.makeText(mContext, "没有检测到内存卡", Toast.LENGTH_SHORT).show();
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            } finally {
-//                try {
-//                    bos.flush();//输出
-//                    bos.close();//关闭
-//                    bm.recycle();// 回收bitmap空间
-//                    mCamera.stopPreview();// 关闭预览
-//                    mCamera.startPreview();// 开启预览
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-
         }
     };
 
