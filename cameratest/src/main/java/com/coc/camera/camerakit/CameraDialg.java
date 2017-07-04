@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.coc.camera.R;
 import com.coc.camera.base.BaseDialogFragment;
 import com.coc.camera.config.CommonConfig;
+import com.coc.camera.utils.ExtraPermissionsHelper;
 import com.coc.camera.utils.Timestamp;
 
 import java.io.BufferedOutputStream;
@@ -37,6 +38,12 @@ import static com.coc.camera.config.CommonConfig.DIR_CAMERA_PATH;
 
 /**
  * Created by tang on 2017/7/3.
+ * 使用说明
+ * 最好使用静态方法进行调用newInstance()
+ *
+ * 返回值获取：(优先级 降低)
+ * 1.使用 匿名内部类FileSavedEventListener获取
+ * 2. 对应的activity 实现FileSavedEventListener
  */
 
 public class CameraDialg extends BaseDialogFragment {
@@ -57,6 +64,23 @@ public class CameraDialg extends BaseDialogFragment {
     private TextView tv_saving_bottom_retake;
     private TextView tv_saving_bottom_save;
     private FileSavedEventListener mFileSavedEventListener;
+
+
+    @Nullable
+    public static CameraDialg newInstance() {
+        //检查相机权限
+        boolean isCameraable = ExtraPermissionsHelper.getInstance().checkPermission_camera();
+        if (isCameraable) {
+            CameraDialg cameradialg = new CameraDialg();
+            cameradialg.setCancelable(true, false)
+                    .setMaskable(false)
+                    .setWithdMode(BaseDialogFragment.WIDTH_MATCH);
+            return cameradialg;
+        } else {
+            //Prompt.showToast("请开启相机权限后重试");
+            return null;
+        }
+    }
 
     @Override
     public View realOnCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

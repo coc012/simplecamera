@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.coc.camera.R;
-import com.coc.camera.base.BaseDialogFragment;
 
 public class DemoCameraDialogActivity extends AppCompatActivity implements CameraDialg.FileSavedEventListener {
 
@@ -34,9 +33,14 @@ public class DemoCameraDialogActivity extends AppCompatActivity implements Camer
     }
 
 
+    //用户响应：去拍照
     public void takePic(View view) {
         Log.e("mainActivity", "tapFous");
-        CameraDialg cameradialg = new CameraDialg();
+
+        //添加权限检查 适配特殊定制机型
+        CameraDialg cameraDialg = CameraDialg.newInstance();
+        if (cameraDialg != null) {
+            //可以使用匿名内部类的样式进行结果回调，也可以是 容器实行相关接口；最好的使用EventBus进行解耦
 //        cameradialg.setFileSavedEventListener(new CameraDialg.FileSavedEventListener() {
 //            @Override
 //            public void onFileSaved(String imgPath) {
@@ -44,10 +48,9 @@ public class DemoCameraDialogActivity extends AppCompatActivity implements Camer
 //                Glide.with(DemoCameraDialogActivity.this).load(imgPath).into(iv_content);
 //            }
 //        });
-        cameradialg.setCancelable(true, false)
-                .setMaskable(false)
-                .setWithdMode(BaseDialogFragment.WIDTH_MATCH)
-                .showSafe(getSupportFragmentManager(), "preview");
+            cameraDialg.showSafe(getSupportFragmentManager(), "camera");
+        }
+
     }
 
 
