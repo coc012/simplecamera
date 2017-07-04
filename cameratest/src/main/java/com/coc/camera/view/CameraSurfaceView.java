@@ -12,6 +12,8 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -262,8 +264,18 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
      */
     private Camera.Size getProperSize(List<Camera.Size> pictureSizeList, float screenRatio) {
         Log.i(TAG, "screenRatio=" + screenRatio);
+        List<Camera.Size> picsizes = pictureSizeList;
+        Comparator<Camera.Size> b2sSize = new Comparator<Camera.Size>() {
+
+            @Override
+            public int compare(Camera.Size lhs, Camera.Size rhs) {
+                return rhs.width - lhs.width;
+            }
+        };
+        Collections.sort(picsizes, b2sSize);//从大到小排序
+
         Camera.Size result = null;
-        for (Camera.Size size : pictureSizeList) {
+        for (Camera.Size size : picsizes) {
             float currentRatio = ((float) size.width) / size.height;
             if (currentRatio - screenRatio == 0) {
                 result = size;
@@ -272,7 +284,7 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
         }
 
         if (null == result) {
-            for (Camera.Size size : pictureSizeList) {
+            for (Camera.Size size : picsizes) {
                 float curRatio = ((float) size.width) / size.height;
                 if (curRatio == 4f / 3) {// 默认w:h = 4:3
                     result = size;
