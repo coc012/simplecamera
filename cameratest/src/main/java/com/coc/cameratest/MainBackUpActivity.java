@@ -1,4 +1,4 @@
-package com.dyk.cameratest;
+package com.coc.cameratest;
 
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -10,15 +10,16 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.dyk.cameratest.view.BaseDialogFragment;
-import com.dyk.cameratest.view.CameraDialg;
-import com.dyk.cameratest.view.CameraKitResultHolder;
-import com.dyk.cameratest.view.PicPreviewDialog;
-import com.dyk.cameratest.view.Timestamp;
+import com.coc.cameratest.view.BaseDialogFragment;
+import com.coc.cameratest.view.CameraDialg;
+import com.coc.cameratest.view.CameraKitResultHolder;
+import com.coc.cameratest.view.PicPreviewDialog;
+import com.coc.cameratest.view.Timestamp;
 
 public class MainBackUpActivity extends AppCompatActivity {
 
 
+    public static final String KEY_IMG_PATH = "KEY_IMGPATH";
     private Button takePicBtn;
 
     @Override
@@ -45,7 +46,6 @@ public class MainBackUpActivity extends AppCompatActivity {
                 .showSafe(getSupportFragmentManager(), "preview");
     }
 
-
     public void tapFocus(View view) {
         Log.e("mainActivity", "tapFous");
 //        if (mCameraSurfaceView != null) {
@@ -60,9 +60,6 @@ public class MainBackUpActivity extends AppCompatActivity {
                 .setWithdMode(BaseDialogFragment.WIDTH_MATCH)
                 .showSafe(getSupportFragmentManager(), "preview");
     }
-
-    public static final String KEY_IMG_PATH = "KEY_IMGPATH";
-
 
     public void returnResult(String imgPath) {
         Toast.makeText(MainBackUpActivity.this, "图片地址：" + imgPath, Toast.LENGTH_SHORT).show();

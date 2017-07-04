@@ -1,4 +1,4 @@
-package com.dyk.cameratest.view;
+package com.coc.cameratest.view;
 
 import android.content.Context;
 import android.hardware.Camera;
@@ -19,26 +19,74 @@ import java.util.List;
  */
 public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Callback, Camera.AutoFocusCallback {
 
-    public interface CameraEventListener {
-        void onTakePic(byte[] data, Camera.Parameters parameters);
-    }
-
-
-    private CameraEventListener mCameraEventListener;
-
-    public void SetCameraEventListener(CameraEventListener cameraEventListener) {
-        this.mCameraEventListener = cameraEventListener;
-    }
-
     private static final String TAG = "CameraSurfaceView";
-
+    private CameraEventListener mCameraEventListener;
     private Context mContext;
     private SurfaceHolder holder;
     private Camera mCamera;
-
     private int mScreenWidth;
     private int mScreenHeight;
+    private int mCurrentFlashMode = 0;
+    // 拍照瞬间调用
+    private Camera.ShutterCallback shutter = new Camera.ShutterCallback() {
+        @Override
+        public void onShutter() {
+            Log.i(TAG, "shutter");
+        }
+    };
+    // 获得没有压缩过的图片数据
+    private Camera.PictureCallback raw = new Camera.PictureCallback() {
 
+        @Override
+        public void onPictureTaken(byte[] data, Camera Camera) {
+            Log.i(TAG, "raw");
+
+        }
+    };
+    //创建jpeg图片回调数据对象
+    private Camera.PictureCallback jpeg = new Camera.PictureCallback() {
+
+        @Override
+        public void onPictureTaken(byte[] data, Camera camera) {
+            if (mCameraEventListener != null) {
+                //mCamera.stopPreview();// 关闭预览
+                //mCamera.startPreview();// 开启预览
+                mCameraEventListener.onTakePic(data, camera.getParameters());
+            }
+//            BufferedOutputStream bos = null;
+//            Bitmap bm = null;
+//            try {
+//                // 获得图片
+//                bm = BitmapFactory.decodeByteArray(data, 0, data.length);
+//                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+//                    Log.i(TAG, "Environment.getExternalStorageDirectory()=" + Environment.getExternalStorageDirectory());
+//                    String filePath = "/sdcard/dyk" + System.currentTimeMillis() + ".jpg";//照片保存路径
+//                    File file = new File(filePath);
+//                    if (!file.exists()) {
+//                        file.createNewFile();
+//                    }
+//                    bos = new BufferedOutputStream(new FileOutputStream(file));
+//                    bm.compress(Bitmap.CompressFormat.JPEG, 100, bos);//将图片压缩到流中
+//
+//                } else {
+//                    Toast.makeText(mContext, "没有检测到内存卡", Toast.LENGTH_SHORT).show();
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            } finally {
+//                try {
+//                    bos.flush();//输出
+//                    bos.close();//关闭
+//                    bm.recycle();// 回收bitmap空间
+//                    mCamera.stopPreview();// 关闭预览
+//                    mCamera.startPreview();// 开启预览
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+
+        }
+    };
 
     public CameraSurfaceView(Context context) {
         this(context, null);
@@ -53,6 +101,10 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
         mContext = context;
         getScreenMetrix(context);
         initView();
+    }
+
+    public void SetCameraEventListener(CameraEventListener cameraEventListener) {
+        this.mCameraEventListener = cameraEventListener;
     }
 
     private void getScreenMetrix(Context context) {
@@ -108,9 +160,6 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
         }
     }
 
-
-    private int mCurrentFlashMode = 0;
-
     /**
      * 设置闪光灯模式
      * 0：FLASH_MODE_OFF
@@ -155,78 +204,11 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
         }
     }
 
-    // 拍照瞬间调用
-    private Camera.ShutterCallback shutter = new Camera.ShutterCallback() {
-        @Override
-        public void onShutter() {
-            Log.i(TAG, "shutter");
-        }
-    };
-
-    // 获得没有压缩过的图片数据
-    private Camera.PictureCallback raw = new Camera.PictureCallback() {
-
-        @Override
-        public void onPictureTaken(byte[] data, Camera Camera) {
-            Log.i(TAG, "raw");
-
-        }
-    };
-
-    //创建jpeg图片回调数据对象
-    private Camera.PictureCallback jpeg = new Camera.PictureCallback() {
-
-        @Override
-        public void onPictureTaken(byte[] data, Camera camera) {
-            if (mCameraEventListener != null) {
-                //mCamera.stopPreview();// 关闭预览
-                //mCamera.startPreview();// 开启预览
-                mCameraEventListener.onTakePic(data, camera.getParameters());
-            }
-//            BufferedOutputStream bos = null;
-//            Bitmap bm = null;
-//            try {
-//                // 获得图片
-//                bm = BitmapFactory.decodeByteArray(data, 0, data.length);
-//                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-//                    Log.i(TAG, "Environment.getExternalStorageDirectory()=" + Environment.getExternalStorageDirectory());
-//                    String filePath = "/sdcard/dyk" + System.currentTimeMillis() + ".jpg";//照片保存路径
-//                    File file = new File(filePath);
-//                    if (!file.exists()) {
-//                        file.createNewFile();
-//                    }
-//                    bos = new BufferedOutputStream(new FileOutputStream(file));
-//                    bm.compress(Bitmap.CompressFormat.JPEG, 100, bos);//将图片压缩到流中
-//
-//                } else {
-//                    Toast.makeText(mContext, "没有检测到内存卡", Toast.LENGTH_SHORT).show();
-//                }
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            } finally {
-//                try {
-//                    bos.flush();//输出
-//                    bos.close();//关闭
-//                    bm.recycle();// 回收bitmap空间
-//                    mCamera.stopPreview();// 关闭预览
-//                    mCamera.startPreview();// 开启预览
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-
-        }
-    };
-
     public void reStartPreview() {
         setCameraParams(mCamera, mScreenWidth, mScreenHeight);
         mCamera.stopPreview();// 关闭预览
         mCamera.startPreview();// 开启预览
     }
-
-//    public Camera getCamera() {
-//        return mCamera;
-//    }
 
     public void setAutoFocus() {
         try {
@@ -236,6 +218,10 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
             Toast.makeText(getContext(), "对焦失败，请重试", Toast.LENGTH_SHORT).show();
         }
     }
+
+//    public Camera getCamera() {
+//        return mCamera;
+//    }
 
     public void takePicture() {
         //设置参数,并拍照
@@ -327,6 +313,10 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
         }
 
         return result;
+    }
+
+    public interface CameraEventListener {
+        void onTakePic(byte[] data, Camera.Parameters parameters);
     }
 
 

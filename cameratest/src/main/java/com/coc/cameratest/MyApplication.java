@@ -1,4 +1,4 @@
-package com.dyk.cameratest;
+package com.coc.cameratest;
 
 import android.app.Application;
 

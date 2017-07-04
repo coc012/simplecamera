@@ -1,4 +1,4 @@
-package com.dyk.cameratest.view;
+package com.coc.cameratest.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -25,6 +25,7 @@ public class RectOnCamera extends View {
     // 圆
     private Point centerPoint;
     private int radio;
+    private IAutoFocus mIAutoFocus;
 
     public RectOnCamera(Context context) {
         this(context, null);
@@ -92,14 +93,12 @@ public class RectOnCamera extends View {
         return true;
     }
 
-    private IAutoFocus mIAutoFocus;
+    public void setIAutoFocus(IAutoFocus mIAutoFocus) {
+        this.mIAutoFocus = mIAutoFocus;
+    }
 
     /** 聚焦的回调接口 */
     public interface  IAutoFocus{
         void autoFocus();
-    }
-
-    public void setIAutoFocus(IAutoFocus mIAutoFocus) {
-        this.mIAutoFocus = mIAutoFocus;
     }
 }

@@ -1,4 +1,4 @@
-package com.dyk.cameratest.view;
+package com.coc.cameratest.view;
 
 public class CameraKitResultHolder {
 

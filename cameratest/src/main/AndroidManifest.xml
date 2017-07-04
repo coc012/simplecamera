@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.dyk.cameratest">
+    package="com.coc.cameratest">
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -12,16 +12,18 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
-            android:theme="@style/CamreaTheme"
-            android:screenOrientation="portrait">
+        <activity
+            android:name="com.coc.cameratest.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CamreaTheme">
 
         </activity>
 
 
-        <activity android:name="com.dyk.cameratest.MainBackUpActivity"
-            android:theme="@style/CamreaTheme"
-            android:screenOrientation="portrait">
+        <activity
+            android:name="com.coc.cameratest.MainBackUpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/CamreaTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

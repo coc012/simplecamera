@@ -1,4 +1,4 @@
-package com.dyk.cameratest.view;
+package com.coc.cameratest.view;
 
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dyk.cameratest.R;
+import com.coc.cameratest.R;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -30,32 +30,29 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.dyk.cameratest.view.PicPreviewDialog.DIR_CAMERA_PATH;
+import static com.coc.cameratest.view.PicPreviewDialog.DIR_CAMERA_PATH;
 
 /**
  * Created by tang on 2017/7/3.
  */
 
 public class CameraDialg extends BaseDialogFragment {
-    @Override
-    public View realOnCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_camera, container, false);
-        initView(view);
-        return view;
-    }
-
-
     private CameraSurfaceView mCameraSurfaceView;
-
     private RelativeLayout rl_content;
     private Button takePicBtn;
-
     private LinearLayout ll_top_preview_panel;
     private LinearLayout preview_control_panel;
     private ImageView toggleFlash;
     private TextView cancel_media_action;
     private TextView re_take_media;
     private TextView confirm_media_result;
+
+    @Override
+    public View realOnCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.dialog_camera, container, false);
+        initView(view);
+        return view;
+    }
 
     private void initView(View view) {
         mCameraSurfaceView = (CameraSurfaceView) view.findViewById(R.id.cameraSurfaceView);
