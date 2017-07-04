@@ -1,4 +1,4 @@
-package com.coc.camera.camerakit;
+package com.coc.camera.cameradialog;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

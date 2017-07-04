@@ -1,4 +1,4 @@
-package com.coc.camera.camerakit;
+package com.coc.camera.cameradialog;
 
 public class CameraKitResultHolder {
 

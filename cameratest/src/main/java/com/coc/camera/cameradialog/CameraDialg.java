@@ -1,4 +1,4 @@
-package com.coc.camera.camerakit;
+package com.coc.camera.cameradialog;
 
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -40,7 +40,6 @@ import static com.coc.camera.config.CommonConfig.DIR_CAMERA_PATH;
  * Created by tang on 2017/7/3.
  * 使用说明
  * 最好使用静态方法进行调用newInstance()
- *
  * 返回值获取：(优先级 降低)
  * 1.使用 匿名内部类FileSavedEventListener获取
  * 2. 对应的activity 实现FileSavedEventListener

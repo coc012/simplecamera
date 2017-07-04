@@ -1,4 +1,4 @@
-package com.coc.camera.camerakit;
+package com.coc.camera.cameradialog;
 
 import android.content.Context;
 import android.hardware.Camera;
