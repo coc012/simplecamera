@@ -1,4 +1,4 @@
-package com.coc.cameratest;
+package com.coc.camera;
 
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -10,11 +10,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.coc.cameratest.view.BaseDialogFragment;
-import com.coc.cameratest.view.CameraDialg;
-import com.coc.cameratest.view.CameraKitResultHolder;
-import com.coc.cameratest.view.PicPreviewDialog;
-import com.coc.cameratest.view.Timestamp;
+import com.coc.camera.view.BaseDialogFragment;
+import com.coc.camera.view.CameraDialg;
+import com.coc.camera.view.CameraKitResultHolder;
+import com.coc.camera.view.PicPreviewDialog;
+import com.coc.camera.view.Timestamp;
 
 public class MainBackUpActivity extends AppCompatActivity {
 

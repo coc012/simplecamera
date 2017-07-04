@@ -1,4 +1,4 @@
-package com.coc.cameratest.view;
+package com.coc.camera.view;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -17,8 +17,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.coc.cameratest.MainBackUpActivity;
-import com.coc.cameratest.R;
+import com.coc.camera.MainBackUpActivity;
+import com.coc.camera.R;
 
 import java.io.File;
 import java.io.FileNotFoundException;

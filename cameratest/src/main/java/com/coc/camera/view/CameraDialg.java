@@ -1,4 +1,4 @@
-package com.coc.cameratest.view;
+package com.coc.camera.view;
 
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.coc.cameratest.R;
+import com.coc.camera.R;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -30,7 +30,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.coc.cameratest.view.PicPreviewDialog.DIR_CAMERA_PATH;
+import static com.coc.camera.view.PicPreviewDialog.DIR_CAMERA_PATH;
 
 /**
  * Created by tang on 2017/7/3.
