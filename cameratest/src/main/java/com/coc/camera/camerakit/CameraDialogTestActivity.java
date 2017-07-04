@@ -1,4 +1,4 @@
-package com.coc.camera;
+package com.coc.camera.camerakit;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.coc.camera.R;
 import com.coc.camera.base.BaseDialogFragment;
-import com.coc.camera.view.CameraDialg;
 
 public class CameraDialogTestActivity extends AppCompatActivity implements CameraDialg.FileSavedEventListener {
 

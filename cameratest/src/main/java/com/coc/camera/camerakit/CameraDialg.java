@@ -1,4 +1,4 @@
-package com.coc.camera.view;
+package com.coc.camera.camerakit;
 
 import android.hardware.Camera;
 import android.os.Bundle;
