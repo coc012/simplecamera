@@ -176,9 +176,22 @@ public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Call
     }
 
     public void reStartPreview() {
-        setCameraParams(mCamera, mScreenWidth, mScreenHeight);
-        mCamera.stopPreview();// 关闭预览
-        mCamera.startPreview();// 开启预览
+        try {
+            if (mCamera == null) return;
+            setCameraParams(mCamera, mScreenWidth, mScreenHeight);
+            mCamera.stopPreview();// 关闭预览
+            mCamera.startPreview();// 开启预览
+        } catch (Exception e) {
+            Log.e("CameraSurfaceView", "Exception stopPreview:" + Log.getStackTraceString(e));
+        }
+    }
+
+    public void stopPreview() {
+        try {
+            if (mCamera != null) mCamera.stopPreview();
+        } catch (Exception e) {
+            Log.e("CameraSurfaceView", "Exception stopPreview:" + Log.getStackTraceString(e));
+        }
     }
 
     public void setAutoFocus() {

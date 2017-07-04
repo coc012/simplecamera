@@ -39,8 +39,6 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.coc.camera.config.CommonConfig.DIR_CAMERA_PATH;
-
 /**
  * Created by tang on 2017/7/3.
  * 使用说明
@@ -71,7 +69,7 @@ public class CameraDialg2 extends BaseDialogFragment {
     private FrameLayout fl_preview;
     private FrameLayout fl_saving;
     private ImageView iv_saving_pic;
-    private boolean showMode;//false:相机预览 true：图片预览
+    private boolean currentMode;//false:相机预览 true：图片预览
 
     @Nullable
     public static CameraDialg2 newInstance() {
@@ -228,6 +226,7 @@ public class CameraDialg2 extends BaseDialogFragment {
 
     //是否显示保存为保存模式 ui
     private void showSaveMode(boolean saveMode) {
+        currentMode = saveMode;
         if (saveMode) {//查看预览照片
 //            rl_priview_content.setClickable(false);
 //            ll_preview_top_panel.setVisibility(View.GONE);
@@ -350,7 +349,7 @@ public class CameraDialg2 extends BaseDialogFragment {
                     public String apply(@NonNull byte[] bytes) throws Exception {
                         File file = new File(CommonConfig.DIR_CAMERA_PATH);
                         if (!file.exists()) file.mkdirs();
-                        String localStoragePath = DIR_CAMERA_PATH + File.separator + System.currentTimeMillis() + ".jpg";
+                        String localStoragePath = CommonConfig.DIR_CAMERA_PATH + File.separator + System.currentTimeMillis() + ".jpg";
                         return bytes2File(bytes, localStoragePath);
                     }
                 })
@@ -378,10 +377,22 @@ public class CameraDialg2 extends BaseDialogFragment {
                 });
     }
 
+    @Override
+    protected void saveFieldStateForReCreate(Bundle outState) {
+        super.saveFieldStateForReCreate(outState);
+        outState.putBoolean("currentMode", currentMode);
+    }
+
+    @Override
+    protected void restoreFieldStateFromSaved(Bundle savedInstanceState) {
+        super.restoreFieldStateFromSaved(savedInstanceState);
+        this.currentMode = savedInstanceState.getBoolean("currentMode");
+    }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (currentMode) mCameraSurfaceView.stopPreview();
         Log.e("CameraDialg2", "onResume");
     }
 
